@@ -252,7 +252,7 @@ public class SortAndSearch {
   }
 
   public static LinkedList radixSortMSD(LinkedList collection, int offset) {
-    if(collection.size() <= 1 || offset > 33) return collection;
+    if(collection.size() <= 1 || offset > 32) return collection;
     LinkedList zeros = new LinkedList();
     LinkedList ones = new LinkedList();
     for(int i : collection) {
@@ -262,15 +262,27 @@ public class SortAndSearch {
     return radixSortMSD(zeros,offset+1).append(radixSortMSD(ones,offset+1));
   }
 
+  public static LinkedList radixSortLSD(LinkedList collection, int offset) {
+    if(offset > 31) return collection;
+    LinkedList zeros = new LinkedList();
+    LinkedList ones = new LinkedList();
+    for(int i : collection) {
+      if((i >>> (offset) & 1) == 0) zeros.add(i);
+      else ones.add(i);
+    }
+
+    return radixSortLSD(ones.append(zeros),offset+1);
+  }
+
   public static void main(String[] args) {
     LinkedList list = new LinkedList();
-    for(int i = 0; i < 10; i++) {
-      list.add((int)(Math.random()*10));
+    for(int i = 0; i < 5; i++) {
+      list.add((int)(Math.random()*5));
     }
     for(Integer i : list) {
       System.out.println(i);
     }
-    list = radixSortMSD(list, 1);
+    list = radixSortLSD(list, 0);
     System.out.println("Sorted");
     for(Integer i : list) {
       System.out.println(i);
