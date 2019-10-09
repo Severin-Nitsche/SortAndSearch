@@ -3,13 +3,13 @@ Sort and Search algorithms
 
 ## Sorting Algorithms:
 
-Bubble Sort
-Binary Tree Sort
-Quick Sort
-Radix Sort MSD
+Bubble Sort<br />
+Binary Tree Sort<br />
+Quick Sort<br />
+Radix Sort MSD<br />
 Radix Sort LSD
 
 ## Searching Algorithms:
 
-Linear Search
-Binary Tree Search
+Linear Search<br />
+Binary Tree Search<br />
