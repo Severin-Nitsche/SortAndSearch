@@ -199,6 +199,7 @@ public class SortAndSearch {
     }
     public LinkedList append(LinkedList collection) {
       if(collection.size == 0) return this;
+      if(this.size == 0) return collection;
       this.root.last.next = collection.root;
       this.root.last = collection.root.last;
       this.size += collection.size();
@@ -250,13 +251,28 @@ public class SortAndSearch {
     return quickSort(lower).add(pivot).append(quickSort(higher));
   }
 
-  public static void main(String[] args) {
-    BinaryTree tree = new BinaryTree();
-    for(int i = 0; i < 10; i++) {
-      tree.add((int)(Math.random()*10));
+  public static LinkedList radixSortMSD(LinkedList collection, int offset) {
+    if(collection.size() <= 1 || offset > 33) return collection;
+    LinkedList zeros = new LinkedList();
+    LinkedList ones = new LinkedList();
+    for(int i : collection) {
+      if((i >>> (32-offset) & 1) == 0) zeros.add(i);
+      else ones.add(i);
     }
-    System.out.println(binaryTreeSearch(tree,3));
-    for(Integer i : tree) {
+    return radixSortMSD(zeros,offset+1).append(radixSortMSD(ones,offset+1));
+  }
+
+  public static void main(String[] args) {
+    LinkedList list = new LinkedList();
+    for(int i = 0; i < 10; i++) {
+      list.add((int)(Math.random()*10));
+    }
+    for(Integer i : list) {
+      System.out.println(i);
+    }
+    list = radixSortMSD(list, 1);
+    System.out.println("Sorted");
+    for(Integer i : list) {
       System.out.println(i);
     }
   }
