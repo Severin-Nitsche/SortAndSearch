@@ -730,6 +730,25 @@ public class SortAndSearch {
       System.out.println(i);
     }
 
+    //Testing Binary Tree sort String
+    System.out.println("\nBinary Tree Sort String:\n");
+    String[] btss = new String[10];
+    for(int i=0; i<btss.length; i++) {
+      btss[i] = "";
+      for(int j=0; j<10; j++) {
+        btss[i] += (char)(Math.random() * 30 + 65);
+      }
+    }
+    System.out.println("unsorted:");
+    for(String i : btss) {
+      System.out.println(i);
+    }
+    btss = binaryTreeSort(btss);
+    System.out.println("Sorted:");
+    for(String i : btss) {
+      System.out.println(i);
+    }
+
     //Testing Binary Tree Search
     System.out.println("\nBinary Tree search\n");
     BinaryTree<Integer> tree = new BinaryTree<Integer>();
