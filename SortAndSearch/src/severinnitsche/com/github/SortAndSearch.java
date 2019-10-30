@@ -61,6 +61,93 @@ public class SortAndSearch {
 
   /**
   *
+  * The Comparator class provides a method to compare to objects
+  *
+  */
+  public static abstract class Comparator<K> {
+    public static final int GREATER = 1;
+    public static final int EQUALS = 0;
+    public static final int LOWER = -1;
+
+    /**
+    *
+    * Returns 1 if i1 > i2, 0 if i1 = i2 and -1 if i1 < i2
+    *
+    */
+    public abstract int compare(K i1, K i2);
+
+    /**
+    *
+    * The Type Enum contains predefined Comparators for some Types
+    *
+    */
+    public static enum Type {
+
+      INTEGER(new Comparator<Integer>() {
+        @Override public int compare(Integer i1, Integer i2) {
+          return i1>i2?1:i2>i1?-1:0;
+        }
+      }),
+      STRING(new Comparator<String>() {
+        @Override public int compare(String i1, String i2) {
+          if(i1.length() > i2.length()) return 1;
+          if(i2.length() > i1.length()) return -1;
+          for(int i=0; i<i1.length(); i++) {
+            if(i1.charAt(i)-i2.charAt(i)!=0) return i1.charAt(i)-i2.charAt(i)>0?1:-1;
+          }
+          return 0;
+        }
+      });
+
+      public final Comparator comparator;
+
+      Type(Comparator comparator) {
+        this.comparator = comparator;
+      }
+
+      /**
+      *
+      * Returns wether there is a predefined Comparator
+      *     for the Type represented by the given class.
+      *
+      */
+      public static boolean has(Class clazz) {
+        for(Type t : Type.values()) {
+          if(t.name().toUpperCase().equals(clazz.getSimpleName().toUpperCase())) return true;
+        }
+        return false;
+      }
+
+      /**
+      *
+      * The TypeNotFoundException is a RuntimeException that shall be thrown
+      *     if Type.get(Class clazz) cannot find the given type
+      *
+      */
+      public static class TypeNotFoundException extends RuntimeException {
+        public TypeNotFoundException(Class clazz) {
+          super("Could not find "+clazz.getSimpleName()+"!");
+        }
+      }
+
+      /**
+      *
+      * Returns clazz's corresponding Type
+      *
+      */
+      public static Type get(Class clazz) {
+        for(Type t : Type.values()) {
+          if(t.name().toUpperCase().equals(clazz.getSimpleName().toUpperCase()))
+            return t;
+        }
+        throw new TypeNotFoundException(clazz);
+      }
+    }
+
+  }
+
+  /**
+  *
   * The Binary Tree class provides methods to populate a Binary Tree,
   *     get the root value and both sub-trees
   * <p>The use of a enhanced for loop returns the items in ascending order but
