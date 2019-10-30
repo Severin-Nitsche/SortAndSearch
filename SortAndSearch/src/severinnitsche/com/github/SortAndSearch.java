@@ -120,6 +120,21 @@ public class SortAndSearch {
 
       /**
       *
+      * The TypeIsNotPredefinedException shall be thrown if T is not
+      *     a predefined Type and no Comparator was specified
+      *
+      */
+      public static class TypeIsNotPredefinedException
+          extends RuntimeException {
+        public TypeIsNotPredefinedException(Class clazz) {
+          super("Could not find Type "+clazz.getSimpleName()+
+              " in Comparator.Type.values(). Please make sure to use a "+
+              "predefined Type or specify a Comparator.");
+        }
+      }
+
+      /**
+      *
       * The TypeNotFoundException is a RuntimeException that shall be thrown
       *     if Type.get(Class clazz) cannot find the given type
       *
@@ -154,7 +169,7 @@ public class SortAndSearch {
   *     is to use with care since it destroyes the tree structure
   *
   */
-  public static class BinaryTree implements Iterable<Integer> {
+  public static class BinaryTree<T> implements Iterable<T> {
 
     /**
     *
@@ -163,8 +178,8 @@ public class SortAndSearch {
     *     is to use with care since it destroyes the tree structure
     *
     */
-    private static class Node implements Iterable<Integer>{
-      int value;
+    private static class Node<T> implements Iterable<T>{
+      T value;
       Node left;               //lower
       Node right;              //higher Or equals
       Node parent;
@@ -175,7 +190,7 @@ public class SortAndSearch {
       * <p>parent may be null
       *
       */
-      public Node(int value, Node parent) {
+      public Node(T value, Node parent) {
         this.value = value;
         this.parent = parent;
       }
@@ -187,13 +202,14 @@ public class SortAndSearch {
       *     creating another if neccessary
       *
       */
-      public void add(int value) {
-        if (value<this.value) {
-          if(left == null) left = new Node(value, this);
-          else left.add(value);
+      public void add(T value, Comparator<T> comparator) {
+        if(comparator.compare(value,this.value) == Comparator.LOWER) {
+        //if (value<this.value) {
+          if(left == null) left = new Node<T>(value, this);
+          else left.add(value, comparator);
         } else {
-          if(right == null) right = new Node(value, this);
-          else right.add(value);
+          if(right == null) right = new Node<T>(value, this);
+          else right.add(value, comparator);
         }
       }
 
@@ -204,7 +220,7 @@ public class SortAndSearch {
       *     and return their values in ascending order
       *
       */
-      private class NodeIterator implements Iterator<Integer> {
+      private class NodeIterator implements Iterator<T> {
 
         Node n;
 
@@ -224,11 +240,11 @@ public class SortAndSearch {
         }
 
         @Override
-        public Integer next() {
+        public T next() {
           while(this.n.left != null) {
             this.n = this.n.left;
           }
-          Integer ret = this.n.value;
+          T ret = (T)this.n.value;
           if(this.n.parent != null) {
             this.n.parent.left = this.n.right;
             if(this.n.right != null) this.n.right.parent = this.n.parent;
@@ -243,7 +259,7 @@ public class SortAndSearch {
       }
 
       @Override
-      public Iterator<Integer> iterator() {
+      public Iterator<T> iterator() {
         return new NodeIterator(this);
       }
 
@@ -251,15 +267,34 @@ public class SortAndSearch {
 
     private Node root;
     private boolean filled;
+    private Comparator<T> comparator;
 
     /**
     *
     * Instanciates a Binary Tree with the root value <i>value</i>
     *
     */
-    public BinaryTree(int value) {
-      root = new Node(value,null);
+    public BinaryTree(T value) {
+      root = new Node<T>(value,null);
       filled = true;
+      if (Comparator.Type.has(this.root.value.getClass())) {
+        comparator = Comparator.Type.get(this.root.value.getClass()).comparator;
+      } else {
+        throw new Comparator.Type.TypeIsNotPredefinedException(
+            this.root.value.getClass()
+        );
+      }
+    }
+
+    /**
+    *
+    * Instanciates a Binary Tree with the root value <i>value</i>
+    *
+    */
+    public BinaryTree(T value, Comparator<T> comparator) {
+      root = new Node<T>(value,null);
+      filled = true;
+      this.comparator = comparator;
     }
 
     /**
@@ -271,6 +306,18 @@ public class SortAndSearch {
     */
     public BinaryTree() {
       filled = false;
+    }
+
+    /**
+    *
+    * Instanciates a Binary Tree without a starting value
+    * <p>Note:
+    * <p>If you instanciate the tree this way <i>isDead()</i> will return true
+    *
+    */
+    public BinaryTree(Comparator<T> comparator) {
+      filled = false;
+      this.comparator = comparator;
     }
 
     /**
@@ -288,17 +335,26 @@ public class SortAndSearch {
     * Inserts a value into the Tree structure
     *
     */
-    public void add(int value) {
+    public void add(T value) {
       if(!filled) {
-        root = new Node(value,null);
+        if(comparator == null) {
+          if (Comparator.Type.has(root.value.getClass())) {
+            comparator = Comparator.Type.get(root.value.getClass()).comparator;
+          } else {
+            throw new Comparator.Type.TypeIsNotPredefinedException(
+                root.value.getClass()
+            );
+          }
+        }
+        root = new Node<T>(value,null);
         filled = true;
       } else {
-        root.add(value);
+        root.add(value, comparator);
       }
     }
 
     @Override
-    public Iterator<Integer> iterator() {
+    public Iterator<T> iterator() {
       return root.iterator();
     }
 
@@ -307,8 +363,8 @@ public class SortAndSearch {
     * Returns the value of the root element
     *
     */
-    public int get() {
-      return root.value;
+    public T get() {
+      return (T)root.value;
     }
 
     /**
@@ -347,7 +403,7 @@ public class SortAndSearch {
   *
   */
   public static int[] binaryTreeSort(int[] collection) {
-    BinaryTree tree = new BinaryTree();
+    BinaryTree<Integer> tree = new BinaryTree<Integer>();
     for(int i = 0; i < collection.length; i++) {
       tree.add(collection[i]);
     }
@@ -364,7 +420,7 @@ public class SortAndSearch {
   * Returns wether the <i>item</i> is contained within the <i>tree</i> or not
   *
   */
-  public static boolean binaryTreeSearch(BinaryTree tree, int item) {
+  public static boolean binaryTreeSearch(BinaryTree<Integer> tree, int item) {
     while(tree.get() != item) {
       if(tree.get() < item) tree = tree.getRight();
       else tree = tree.getLeft();
