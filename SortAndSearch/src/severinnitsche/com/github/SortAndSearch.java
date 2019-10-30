@@ -222,7 +222,7 @@ public class SortAndSearch {
       */
       private class NodeIterator implements Iterator<T> {
 
-        Node n;
+        Node<T> n;
 
         /**
         *
@@ -338,11 +338,11 @@ public class SortAndSearch {
     public void add(T value) {
       if(!filled) {
         if(comparator == null) {
-          if (Comparator.Type.has(root.value.getClass())) {
-            comparator = Comparator.Type.get(root.value.getClass()).comparator;
+          if (Comparator.Type.has(value.getClass())) {
+            comparator = Comparator.Type.get(value.getClass()).comparator;
           } else {
             throw new Comparator.Type.TypeIsNotPredefinedException(
-                root.value.getClass()
+                value.getClass()
             );
           }
         }
@@ -402,13 +402,13 @@ public class SortAndSearch {
   * Returns the sorted <i>collection</i>
   *
   */
-  public static int[] binaryTreeSort(int[] collection) {
-    BinaryTree<Integer> tree = new BinaryTree<Integer>();
+  public static <T> T[] binaryTreeSort(T[] collection) {
+    BinaryTree<T> tree = new BinaryTree<T>();
     for(int i = 0; i < collection.length; i++) {
       tree.add(collection[i]);
     }
     int i = 0;
-    for(Integer item : tree) {
+    for(T item : tree) {
       collection[i] = item;
       i++;
     }
@@ -420,9 +420,17 @@ public class SortAndSearch {
   * Returns wether the <i>item</i> is contained within the <i>tree</i> or not
   *
   */
-  public static boolean binaryTreeSearch(BinaryTree<Integer> tree, int item) {
+  public static <T> boolean binaryTreeSearch(BinaryTree<T> tree, T item) {
+    //setting up comparator
+    Comparator<T> comparator;
+    if(Comparator.Type.has(item.getClass())) {
+      comparator = Comparator.Type.get(item.getClass()).comparator;
+    } else {
+      throw new Comparator.Type.TypeIsNotPredefinedException(item.getClass());
+    }
+    //binaray tree search
     while(tree.get() != item) {
-      if(tree.get() < item) tree = tree.getRight();
+      if(/*tree.get() < item*/comparator.compare(tree.get(),item) == Comparator.LOWER) tree = tree.getRight();
       else tree = tree.getLeft();
       if(tree.isDead()) return false;
     }
@@ -441,19 +449,19 @@ public class SortAndSearch {
   *         and if you want to acces individual fields use an array or alike
   *
   */
-  public static class LinkedList implements Iterable<Integer> {
+  public static class LinkedList<T> implements Iterable<T> {
 
     /**
     *
     * The Node class provides the possibility to link values together
     *
     */
-    private class Node {
+    private class Node<T> {
 
       boolean filled;
-      int value;
-      Node next;
-      Node last;
+      T value;
+      Node<T> next;
+      Node<T> last;
 
       /**
       *
@@ -470,7 +478,7 @@ public class SortAndSearch {
       * Creates a Node structure from the <i>collection</i>
       *
       */
-      public Node(int...collection) {
+      public Node(T...collection) {
         filled = true;
         this.value = collection[0];
         last = this;
@@ -487,17 +495,17 @@ public class SortAndSearch {
       *       which makes adding elements to it way more performant
       *
       */
-      public Node add(int item) {
+      public Node add(T item) {
         if(!filled) {
           filled = true;
           value = item;
           last = this;
         } else if(next == null) {
-          next = new Node(item);
+          next = new Node<T>(item);
           last = next;
         } else {
           if(last != null) {
-            last.next = new Node(item);
+            last.next = new Node<T>(item);
             last = last.next;
           } else {
             last = next.add(item);
@@ -507,7 +515,7 @@ public class SortAndSearch {
       }
     }
 
-    Node root;
+    Node<T> root;
     private int size;
 
     /**
@@ -516,7 +524,7 @@ public class SortAndSearch {
     *
     */
     public LinkedList() {
-      this.root = new Node();
+      this.root = new Node<T>();
       this.size = 0;
     }
 
@@ -525,8 +533,8 @@ public class SortAndSearch {
     * Creates a Linked List from the given <i>collection</i>
     *
     */
-    public LinkedList(int...collection) {
-      this.root = new Node(collection);
+    public LinkedList(T...collection) {
+      this.root = new Node<T>(collection);
       this.size = collection.length;
     }
 
@@ -537,7 +545,7 @@ public class SortAndSearch {
     * <p>Adds the <i>item</i> into the List
     *
     */
-    public LinkedList add(int item) {
+    public LinkedList<T> add(T item) {
       this.root.add(item);
       size++;
       return this;
@@ -553,7 +561,7 @@ public class SortAndSearch {
     *     <i>this</i> list or the <i>collection</i>
     *
     */
-    public LinkedList append(LinkedList collection) {
+    public LinkedList<T> append(LinkedList<T> collection) {
       if(collection.size == 0) return this;
       if(this.size == 0) return collection;
       this.root.last.next = collection.root;
@@ -577,15 +585,15 @@ public class SortAndSearch {
     *     to traverse a Linked List in performant fashion
     *
     */
-    private class NodeIterator implements Iterator<Integer> {
-      private Node n;
+    private class NodeIterator implements Iterator<T> {
+      private Node<T> n;
 
       /**
       *
       * Creates a Node Iterator with <i>n</i> as its root element
       *
       */
-      public NodeIterator(Node n) {
+      public NodeIterator(Node<T> n) {
         this.n = n;
       }
 
@@ -595,15 +603,15 @@ public class SortAndSearch {
       }
 
       @Override
-      public Integer next() {
-        Integer ret = this.n.value;
+      public T next() {
+        T ret = this.n.value;
         this.n = this.n.next;
         return ret;
       }
     }
 
     @Override
-    public Iterator<Integer> iterator() {
+    public Iterator<T> iterator() {
       return new NodeIterator(root);
     }
   }
@@ -613,18 +621,29 @@ public class SortAndSearch {
   * Returns the sorted <i>collection</i>
   *
   */
-  public static LinkedList quickSort(LinkedList collection) {
+  public static <T> LinkedList<T> quickSort(LinkedList<T> collection) {
+    //setting up Comparator
+    Comparator<T> comparator;
+    if(Comparator.Type.has(collection.root.value.getClass())) {
+      comparator = Comparator.Type.get(collection.root.getClass()).comparator;
+    } else {
+      throw new Comparator.Type.TypeIsNotPredefinedException(
+          collection.root.getClass()
+      );
+    }
+    //quick sort
     if(collection.size() <= 1) return collection;
-    int pivot = collection.root.value;
-    LinkedList lower = new LinkedList();
-    LinkedList higher = new LinkedList();
+    T pivot = collection.root.value;
+    LinkedList<T> lower = new LinkedList<T>();
+    LinkedList<T> higher = new LinkedList<T>();
     int j = 0;
-    for(Integer i : collection) {
+    for(T i : collection) {
       if(j == 0) {
         j++;
         continue;
       }
-      if(i < pivot) lower.add(i);
+      //i < pivot
+      if(comparator.compare(i, pivot) == Comparator.LOWER) lower.add(i);
       else higher.add(i);
       j++;
     }
@@ -638,10 +657,10 @@ public class SortAndSearch {
   * <p><i>offset</i> needs to be one otherwise the algorithm may not work
   *
   */
-  public static LinkedList radixSortMSD(LinkedList collection, int offset) {
+  public static LinkedList<Integer> radixSortMSD(LinkedList<Integer> collection, int offset) {
     if(collection.size() <= 1 || offset > 32) return collection;
-    LinkedList zeros = new LinkedList();
-    LinkedList ones = new LinkedList();
+    LinkedList<Integer> zeros = new LinkedList();
+    LinkedList<Integer> ones = new LinkedList();
     for(int i : collection) {
       if((i >>> (32-offset) & 1) == 0) zeros.add(i);
       else ones.add(i);
@@ -658,10 +677,10 @@ public class SortAndSearch {
   * <p><i>offset</i> needs to be zero otherwise the algorithm may not work
   *
   */
-  public static LinkedList radixSortLSD(LinkedList collection, int offset) {
+  public static LinkedList<Integer> radixSortLSD(LinkedList<Integer> collection, int offset) {
     if(offset > 31) return collection;
-    LinkedList zeros = new LinkedList();
-    LinkedList ones = new LinkedList();
+    LinkedList<Integer> zeros = new LinkedList();
+    LinkedList<Integer> ones = new LinkedList();
     for(int i : collection) {
       if((i >>> (offset) & 1) == 0) zeros.add(i);
       else ones.add(i);
@@ -671,7 +690,7 @@ public class SortAndSearch {
   }
 
   public static void main(String[] args) {
-    LinkedList list = new LinkedList();
+    /*LinkedList<Integer> list = new LinkedList<Integer>();
     for(int i = 0; i < 5; i++) {
       list.add((int)(Math.random()*5));
     }
@@ -681,6 +700,18 @@ public class SortAndSearch {
     list = radixSortLSD(list, 0);
     System.out.println("Sorted");
     for(Integer i : list) {
+      System.out.println(i);
+    }*/
+    Integer[] list = new Integer[15];
+    for(int i=0; i<list.length; i++) {
+      list[i] = (int)(Math.random() * 10);
+    }
+    for(int i : list) {
+      System.out.println(i);
+    }
+    list = binaryTreeSort(list);
+    System.out.println("Sorted:");
+    for(int i : list) {
       System.out.println(i);
     }
   }
