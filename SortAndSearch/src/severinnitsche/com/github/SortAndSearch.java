@@ -698,6 +698,33 @@ public class SortAndSearch {
 		}
 		return quickSort(lower).add(pivot).append(quickSort(higher));
 	}
+	
+	/**
+	 *
+	 * Returns the sorted <i>collection</i>
+	 *
+	 */
+	public static <T> LinkedList<T> quickSort(LinkedList<T> collection, Comparator<T> comparator) {
+		if (collection.size() <= 1);
+		// quick sort
+		T pivot = collection.root.value;
+		LinkedList<T> lower = new LinkedList<T>();
+		LinkedList<T> higher = new LinkedList<T>();
+		int j = 0;
+		for (T i : collection) {
+			if (j == 0) {
+				j++;
+				continue;
+			}
+			// i < pivot
+			if (comparator.compare(i, pivot) == Comparator.LOWER)
+				lower.add(i);
+			else
+				higher.add(i);
+			j++;
+		}
+		return quickSort(lower).add(pivot).append(quickSort(higher));
+	}
 
 	/**
 	 *
