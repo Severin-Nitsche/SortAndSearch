@@ -146,7 +146,8 @@ public class SortAndSearch {
 			 *     a predefined Type and no Comparator was specified
        *
        */
-      public static class TypeIsNotPredefinedException extends RuntimeException {
+      public static class TypeIsNotPredefinedException
+			  extends RuntimeException {
         public TypeIsNotPredefinedException(Class clazz) {
           super("Could not find Type " + clazz.getSimpleName()
               + " in Comparator.Type.values(). Please make sure to use a "
@@ -682,13 +683,19 @@ public class SortAndSearch {
    * Returns the sorted <i>collection</i>
    *
    */
-  public static <T> LinkedList<T> quickSort(LinkedList<T> collection, Order order) {
+  public static <T> LinkedList<T> quickSort(
+	  LinkedList<T> collection, Order order
+	) {
     // retrieving default Comparator
     Comparator<T> comparator;
     if (Comparator.Type.has(collection.root.value.getClass())) {
-      comparator = Comparator.Type.get(collection.root.value.getClass()).comparator;
+      comparator = Comparator.Type.get(
+			  collection.root.value.getClass()
+			).comparator;
     } else {
-      throw new Comparator.Type.TypeIsNotPredefinedException(collection.root.getClass());
+      throw new Comparator.Type.TypeIsNotPredefinedException(
+			  collection.root.getClass()
+			);
     }
     //calling quickSort
     return quickSort(collection, order, comparator);
@@ -699,7 +706,9 @@ public class SortAndSearch {
    * Returns the sorted <i>collection</i>
    *
    */
-  public static <T> LinkedList<T> quickSort(LinkedList<T> collection, Order order, Comparator<T> comparator) {
+  public static <T> LinkedList<T> quickSort(
+	  LinkedList<T> collection, Order order, Comparator<T> comparator
+	) {
     if (collection.size() <= 1) return collection;
     T pivot = collection.root.value;
     LinkedList<T> lower = new LinkedList<T>();
@@ -711,13 +720,17 @@ public class SortAndSearch {
         continue;
       }
       // i < pivot
-      if (!(comparator.compare(i, pivot) == Comparator.LOWER ^ order == Order.ASCENDING))
+      if (!(comparator.compare(i, pivot) == Comparator.LOWER
+			  ^ order == Order.ASCENDING)
+			)
         lower.add(i);
       else
         higher.add(i);
       j++;
     }
-    return quickSort(lower,order,comparator).add(pivot).append(quickSort(higher,order,comparator));
+    return quickSort(lower,order,comparator).add(pivot).append(
+		  quickSort(higher,order,comparator)
+		);
   }
 
   /**
@@ -728,7 +741,9 @@ public class SortAndSearch {
   */
   public static class UnexpectedException extends RuntimeException {
     public UnexpectedException() {
-      super("This should definitly not happen! Perhaps you should reconsider your Life choices!");
+      super("This should definitly not happen!"+
+			  "Perhaps you should reconsider your Life choices!"
+			);
     }
   }
 
@@ -741,7 +756,9 @@ public class SortAndSearch {
    * <i>offset</i> needs to be one otherwise the algorithm may not work
    *
    */
-  public static LinkedList<Integer> radixSortMSD(LinkedList<Integer> collection, int offset, Order order) {
+  public static LinkedList<Integer> radixSortMSD(
+	  LinkedList<Integer> collection, int offset, Order order
+	) {
     if (collection.size() <= 1 || offset > 32)
       return collection;
     LinkedList<Integer> zeros = new LinkedList();
@@ -754,9 +771,13 @@ public class SortAndSearch {
     }
     switch(order) {
       case ASCENDING:
-        return radixSortMSD(zeros, offset + 1, order).append(radixSortMSD(ones, offset + 1, order));
+        return radixSortMSD(zeros, offset + 1, order).append(
+				  radixSortMSD(ones, offset + 1, order)
+				);
       case DESCENDING:
-        return radixSortMSD(ones, offset + 1, order).append(radixSortMSD(zeros, offset + 1, order));
+        return radixSortMSD(ones, offset + 1, order).append(
+				  radixSortMSD(zeros, offset + 1, order)
+				);
       default:
         throw new UnexpectedException();
     }
@@ -775,7 +796,9 @@ public class SortAndSearch {
    * <i>offset</i> needs to be zero otherwise the algorithm may not work
    *
    */
-  public static LinkedList<Integer> radixSortLSD(LinkedList<Integer> collection, int offset, Order order) {
+  public static LinkedList<Integer> radixSortLSD(
+	  LinkedList<Integer> collection, int offset, Order order
+	) {
     if (offset > 31)
       return collection;
     LinkedList<Integer> zeros = new LinkedList();
