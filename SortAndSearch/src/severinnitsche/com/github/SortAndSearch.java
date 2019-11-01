@@ -704,6 +704,18 @@ public class SortAndSearch {
 		return quickSort(lower,order,comparator).add(pivot).append(quickSort(higher,order,comparator));
 	}
 
+  /**
+	*
+	* The UnexpectedException shall be thrown if there is not really any
+	*     reason to get an Error
+	*
+	*/
+  public static class UnexpectedException extends RuntimeException {
+		public UnexpectedException() {
+			super("This should definitly not happen! Perhaps you should reconsider your Life choices!");
+		}
+	}
+
 	/**
 	 *
 	 * Returns the sorted <i>collection</i> in ascending order
@@ -713,7 +725,7 @@ public class SortAndSearch {
 	 * <i>offset</i> needs to be one otherwise the algorithm may not work
 	 *
 	 */
-	public static LinkedList<Integer> radixSortMSD(LinkedList<Integer> collection, int offset) {
+	public static LinkedList<Integer> radixSortMSD(LinkedList<Integer> collection, int offset, Order order) {
 		if (collection.size() <= 1 || offset > 32)
 			return collection;
 		LinkedList<Integer> zeros = new LinkedList();
@@ -724,7 +736,14 @@ public class SortAndSearch {
 			else
 				ones.add(i);
 		}
-		return radixSortMSD(zeros, offset + 1).append(radixSortMSD(ones, offset + 1));
+		switch(order) {
+			case ASCENDING:
+			  return radixSortMSD(zeros, offset + 1, order).append(radixSortMSD(ones, offset + 1, order));
+			case DESCENDING:
+			  return radixSortMSD(ones, offset + 1, order).append(radixSortMSD(zeros, offset + 1, order));
+			default:
+			  throw new UnexpectedException();
+		}
 	}
 
 	/**
@@ -740,7 +759,7 @@ public class SortAndSearch {
 	 * <i>offset</i> needs to be zero otherwise the algorithm may not work
 	 *
 	 */
-	public static LinkedList<Integer> radixSortLSD(LinkedList<Integer> collection, int offset) {
+	public static LinkedList<Integer> radixSortLSD(LinkedList<Integer> collection, int offset, Order order) {
 		if (offset > 31)
 			return collection;
 		LinkedList<Integer> zeros = new LinkedList();
@@ -751,8 +770,14 @@ public class SortAndSearch {
 			else
 				ones.add(i);
 		}
-
-		return radixSortLSD(ones.append(zeros), offset + 1);
+		switch(order) {
+			case DESCENDING:
+		    return radixSortLSD(ones.append(zeros), offset + 1, order);
+			case ASCENDING:
+			  return radixSortLSD(zeros.append(ones), offset + 1, order);
+			default:
+			  throw new UnexpectedException();
+	  }
 	}
 
 	public static void main(String[] args) {
@@ -849,7 +874,7 @@ public class SortAndSearch {
 		for (Integer i : rsm) {
 			System.out.println(i);
 		}
-		rsm = radixSortMSD(rsm, 1);
+		rsm = radixSortMSD(rsm, 1, Order.DESCENDING);
 		System.out.println("sorted:");
 		for (Integer i : rsm) {
 			System.out.println(i);
@@ -864,7 +889,7 @@ public class SortAndSearch {
 		for (Integer i : list) {
 			System.out.println(i);
 		}
-		list = radixSortLSD(list, 0);
+		list = radixSortLSD(list, 0, Order.DESCENDING);
 		System.out.println("Sorted");
 		for (Integer i : list) {
 			System.out.println(i);
