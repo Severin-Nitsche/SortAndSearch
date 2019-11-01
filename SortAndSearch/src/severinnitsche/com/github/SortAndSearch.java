@@ -33,6 +33,10 @@ import java.lang.Iterable;
  */
 public class SortAndSearch {
 
+	public static enum Order {
+		ASCENDING, DESCENDING;
+	}
+
 	/**
 	 *
 	 * Returns the index of the <i>item</i> in the <i>collection</i>
@@ -49,12 +53,14 @@ public class SortAndSearch {
 	/**
 	 *
 	 * Returns the sorted <i>collection</i>
+	 * <p>Using <i>!(Comparison ^ Defaultorder == Order)</i> to get it Sorted
+	 *     Ascending or Descending depending on order
 	 *
 	 */
-	public static int[] bubbleSort(int[] collection) {
+	public static int[] bubbleSort(int[] collection, Order order) {
 		for (int i = 1; i < collection.length; i++) {
 			for (int j = 0; j < collection.length - i; j++) {
-				if (collection[j] > collection[j + 1]) {
+				if (!(collection[j] > collection[j + 1] ^ order == Order.ASCENDING)) {
 					int temp = collection[j];
 					collection[j] = collection[j + 1];
 					collection[j + 1] = temp;
@@ -422,17 +428,8 @@ public class SortAndSearch {
 	 * Returns the sorted <i>collection</i>
 	 *
 	 */
-	public static <T> T[] binaryTreeSort(T[] collection) {
-		BinaryTree<T> tree = new BinaryTree<T>();
-		for (int i = 0; i < collection.length; i++) {
-			tree.add(collection[i]);
-		}
-		int i = 0;
-		for (T item : tree) {
-			collection[i] = item;
-			i++;
-		}
-		return collection;
+	public static <T> T[] binaryTreeSort(T[] collection, Order order) {
+		return binaryTreeSort(collection, null, order);
 	}
 
 	/**
@@ -440,15 +437,15 @@ public class SortAndSearch {
 	 * Returns the sorted <i>collection</i>
 	 *
 	 */
-	public static <T> T[] binaryTreeSort(T[] collection, Comparator<T> comparator) {
+	public static <T> T[] binaryTreeSort(T[] collection, Comparator<T> comparator, Order order) {
 		BinaryTree<T> tree = new BinaryTree<T>(comparator);
 		for (int i = 0; i < collection.length; i++) {
 			tree.add(collection[i]);
 		}
-		int i = 0;
+		int i = order==Order.ASCENDING?0:collection.length-1;
 		for (T item : tree) {
 			collection[i] = item;
-			i++;
+			i += order==Order.ASCENDING?1:-1;
 		}
 		return collection;
 	}
@@ -669,44 +666,25 @@ public class SortAndSearch {
 	 * Returns the sorted <i>collection</i>
 	 *
 	 */
-	public static <T> LinkedList<T> quickSort(LinkedList<T> collection) {
-		if (collection.size() <= 1)
-			return collection;
-		// setting up Comparator
+	public static <T> LinkedList<T> quickSort(LinkedList<T> collection, Order order) {
+		// retrieving default Comparator
 		Comparator<T> comparator;
 		if (Comparator.Type.has(collection.root.value.getClass())) {
 			comparator = Comparator.Type.get(collection.root.value.getClass()).comparator;
 		} else {
 			throw new Comparator.Type.TypeIsNotPredefinedException(collection.root.getClass());
 		}
-		// quick sort
-		T pivot = collection.root.value;
-		LinkedList<T> lower = new LinkedList<T>();
-		LinkedList<T> higher = new LinkedList<T>();
-		int j = 0;
-		for (T i : collection) {
-			if (j == 0) {
-				j++;
-				continue;
-			}
-			// i < pivot
-			if (comparator.compare(i, pivot) == Comparator.LOWER)
-				lower.add(i);
-			else
-				higher.add(i);
-			j++;
-		}
-		return quickSort(lower).add(pivot).append(quickSort(higher));
+		//calling quickSort
+		return quickSort(collection, order, comparator);
 	}
-	
+
 	/**
 	 *
 	 * Returns the sorted <i>collection</i>
 	 *
 	 */
-	public static <T> LinkedList<T> quickSort(LinkedList<T> collection, Comparator<T> comparator) {
-		if (collection.size() <= 1);
-		// quick sort
+	public static <T> LinkedList<T> quickSort(LinkedList<T> collection, Order order, Comparator<T> comparator) {
+		if (collection.size() <= 1) return collection;
 		T pivot = collection.root.value;
 		LinkedList<T> lower = new LinkedList<T>();
 		LinkedList<T> higher = new LinkedList<T>();
@@ -717,13 +695,13 @@ public class SortAndSearch {
 				continue;
 			}
 			// i < pivot
-			if (comparator.compare(i, pivot) == Comparator.LOWER)
+			if (!(comparator.compare(i, pivot) == Comparator.LOWER ^ order == Order.ASCENDING))
 				lower.add(i);
 			else
 				higher.add(i);
 			j++;
 		}
-		return quickSort(lower).add(pivot).append(quickSort(higher));
+		return quickSort(lower,order,comparator).add(pivot).append(quickSort(higher,order,comparator));
 	}
 
 	/**
@@ -796,7 +774,7 @@ public class SortAndSearch {
 			bs[i] = (int) (Math.random() * bs.length);
 			System.out.println(bs[i]);
 		}
-		bubbleSort(bs);
+		bubbleSort(bs, Order.ASCENDING);
 		System.out.println("sorted");
 		for (int i : bs) {
 			System.out.println(i);
@@ -812,7 +790,7 @@ public class SortAndSearch {
 		for (int i : bts) {
 			System.out.println(i);
 		}
-		bts = binaryTreeSort(bts);
+		bts = binaryTreeSort(bts, Order.ASCENDING);
 		System.out.println("Sorted:");
 		for (int i : bts) {
 			System.out.println(i);
@@ -831,7 +809,7 @@ public class SortAndSearch {
 		for (String i : btss) {
 			System.out.println(i);
 		}
-		btss = binaryTreeSort(btss);
+		btss = binaryTreeSort(btss, Order.DESCENDING);
 		System.out.println("Sorted:");
 		for (String i : btss) {
 			System.out.println(i);
@@ -855,7 +833,7 @@ public class SortAndSearch {
 		for (Integer i : qs) {
 			System.out.println(i);
 		}
-		qs = quickSort(qs);
+		qs = quickSort(qs, Order.DESCENDING);
 		System.out.println("sorted:");
 		for (Integer i : qs) {
 			System.out.println(i);
