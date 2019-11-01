@@ -33,6 +33,11 @@ import java.lang.Iterable;
  */
 public class SortAndSearch {
 
+  /**
+	*
+	* The Order Enum contains the ordering constants for the sort algorithms
+	*
+	*/
   public static enum Order {
     ASCENDING, DESCENDING;
   }
