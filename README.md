@@ -20,7 +20,9 @@ _Step 3:_ Enjoy!
 ## Javadoc
 [Javadoc](https://severin-nitsche.github.io/SortAndSearch/SortAndSearch/doc)
 
-## Sorting Algorithms:
+## Algorithms
+
+### Sorting Algorithms:
 
 Bubble Sort<br />
 Binary Tree Sort<br />
@@ -28,7 +30,12 @@ Quick Sort<br />
 Radix Sort MSD<br />
 Radix Sort LSD
 
-## Searching Algorithms:
+### Searching Algorithms:
 
 Linear Search<br />
 Binary Tree Search<br />
+
+## Data Structures
+
+[Linked List](https://severin-nitsche.github.io/SortAndSearch/SortAndSearch/doc/severinnitsche/com/github/SortAndSearch.LinkedList.html)<br />
+[Binary Tree](https://severin-nitsche.github.io/SortAndSearch/SortAndSearch/doc/severinnitsche/com/github/SortAndSearch.BinaryTree.html)<br />
