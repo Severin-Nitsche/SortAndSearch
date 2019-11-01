@@ -122,8 +122,8 @@ public class SortAndSearch {
 
       /**
        *
-       * Returns wether there is a predefined Comparator for the Type represented by
-       *     the given class.
+       * Returns wether there is a predefined Comparator for the Type
+       *    represented by the given class.
        *
        */
       public static boolean has(Class clazz) {
@@ -304,7 +304,9 @@ public class SortAndSearch {
       if (Comparator.Type.has(this.root.value.getClass())) {
         comparator = Comparator.Type.get(this.root.value.getClass()).comparator;
       } else {
-        throw new Comparator.Type.TypeIsNotPredefinedException(this.root.value.getClass());
+        throw new Comparator.Type.TypeIsNotPredefinedException(
+				  this.root.value.getClass()
+			  );
       }
     }
 
@@ -368,7 +370,9 @@ public class SortAndSearch {
           if (Comparator.Type.has(value.getClass())) {
             comparator = Comparator.Type.get(value.getClass()).comparator;
           } else {
-            throw new Comparator.Type.TypeIsNotPredefinedException(value.getClass());
+            throw new Comparator.Type.TypeIsNotPredefinedException(
+						  value.getClass()
+						);
           }
         }
         root = new Node<T>(value, null);
@@ -438,7 +442,9 @@ public class SortAndSearch {
    * Returns the sorted <i>collection</i>
    *
    */
-  public static <T> T[] binaryTreeSort(T[] collection, Comparator<T> comparator, Order order) {
+  public static <T> T[] binaryTreeSort(
+	  T[] collection, Comparator<T> comparator, Order order
+	) {
     BinaryTree<T> tree = new BinaryTree<T>(comparator);
     for (int i = 0; i < collection.length; i++) {
       tree.add(collection[i]);
@@ -467,7 +473,8 @@ public class SortAndSearch {
 
     // binaray tree search
     while (tree.get() != item) {
-      if (/* tree.get() < item */comparator.compare(tree.get(), item) == Comparator.LOWER)
+			// tree.get() < item
+      if (comparator.compare(tree.get(), item) == Comparator.LOWER)
         tree = tree.getRight();
       else
         tree = tree.getLeft();
