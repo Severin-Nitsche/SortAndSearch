@@ -17,6 +17,9 @@ _Step 1:_ Compile the Java source file<br />
 _Step 2:_ Create a jar file<br />
 _Step 3:_ Enjoy!
 
+## Javadoc
+[Javadoc](https://severin-nitsche.github.io/SortAndSearch/SortAndSearch/doc)
+
 ## Sorting Algorithms:
 
 Bubble Sort<br />
