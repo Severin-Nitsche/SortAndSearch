@@ -82,7 +82,7 @@ public class SortAndSearch {
 
     /**
      *
-     * Returns 1 if i1 > i2, 0 if i1 = i2 and -1 if i1 < i2
+     * Returns 1 if i1 &gt; i2, 0 if i1 = i2 and -1 if i1 &lt; i2
      *
      */
     public abstract int compare(K i1, K i2);
@@ -99,7 +99,7 @@ public class SortAndSearch {
         public int compare(Integer i1, Integer i2) {
           return i1 > i2 ? 1 : i2 > i1 ? -1 : 0;
         }
-      }), STRING(new Comparator<String>() {
+      }, "java.lang.Integer"), STRING(new Comparator<String>() {
         @Override
         public int compare(String i1, String i2) {
           if (i1.length() > i2.length())
@@ -112,12 +112,18 @@ public class SortAndSearch {
           }
           return 0;
         }
-      });
+      }, "java.lang.String");
 
       public final Comparator comparator;
+			public final Class clazz;
 
-      Type(Comparator comparator) {
+      Type(Comparator comparator, String clazz) {
         this.comparator = comparator;
+				try {
+				  this.clazz = Class.forName(clazz);
+			  } catch(ClassNotFoundException e) {
+					throw new IllegalArgumentException(clazz+" is not a class!");
+				}
       }
 
       /**
@@ -128,7 +134,7 @@ public class SortAndSearch {
        */
       public static boolean has(Class clazz) {
         for (Type t : Type.values()) {
-          if (t.name().toUpperCase().equals(clazz.getSimpleName().toUpperCase()))
+          if (t.clazz.equals(clazz))
             return true;
         }
         return false;
@@ -167,7 +173,7 @@ public class SortAndSearch {
        */
       public static Type get(Class clazz) {
         for (Type t : Type.values()) {
-          if (t.name().toUpperCase().equals(clazz.getSimpleName().toUpperCase()))
+          if (t.clazz.equals(clazz))
             return t;
         }
         throw new TypeNotFoundException(clazz);
