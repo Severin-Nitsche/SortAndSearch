@@ -24,11 +24,24 @@ _Step 3:_ Enjoy!
 
 ### Sorting Algorithms:
 
-Bubble Sort<br />
-Binary Tree Sort<br />
-Quick Sort<br />
-Radix Sort MSD<br />
-Radix Sort LSD
+<details>
+  <summary>Bubble Sort</summary>
+  <p>Bubble Sort works by going through a list and comparing adjacent elements and swapping them if unsorted. This procedure is repeated until the list is fully sorted.</p>
+</details>
+<details>
+  <summary>Binary Tree Sort</summary>
+  <p>Binary Tree Sort works by going through a list and inserting its elements into a tree structure, which, branching out from one root node, consists of several nodes that, besides one value, each keep two references: One to a node with a higher value, and anotherone to a node with a lower value. If one imagines the higher value references as branching out right and the lower value references as branching out left, themost right node in the newly populated tree includes the highest and the most left the lowest value. Knowing this its a breeze to desolve the tree and obtain a sorted list.</p>
+</details>
+<details>
+  <summary>Quick Sort</summary>
+  <p>Quick Sort works by choosing a pivot Element from the unsorted list and then creating two lists, one with all values that are lower than the pivot and another one with all values that are higher than the pivot. Quick Sort is then used on this lists again and the result of them is then concatenated to each other with the pivot in the middle. This recursive behavior will only be terminated when the list given to Quick Sort is fully sorted.</p>
+</details>
+<details>
+  <summary>Radix Sort MSD</summary>
+</details>
+<details>
+  <summary>Radix Sort LSD</summary>
+</details>
 
 ### Searching Algorithms:
 
