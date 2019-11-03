@@ -38,9 +38,11 @@ _Step 3:_ Enjoy!
 </details>
 <details>
   <summary>Radix Sort MSD</summary>
+  <p>Radix Sort MSD works by grouping the values of a list together depending on their Most Significant Digit, theses groups are than grouped even further until there is no digit left. Then all the tiny Groups are concatenated in order again.</p>
 </details>
 <details>
   <summary>Radix Sort LSD</summary>
+  <p>Radix Sort LSD works by grouping the values of a list together depending on their lowest significant digit. These emerged groups are then concatenated in order and the process is repeated with the next more significant digit.</p>
 </details>
 
 ### Searching Algorithms:
