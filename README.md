@@ -18,7 +18,7 @@ _Step 2:_ Create a jar file<br />
 _Step 3:_ Enjoy!
 
 ## Javadoc
-[Javadoc](https://severin-nitsche.github.io/SortAndSearch/SortAndSearch/doc)
+[Javadoc](https://severin-nitsche.github.io/SortAndSearch-Documentation/doc/severinnitsche/com/github/package-summary.html)
 
 ## Algorithms
 
