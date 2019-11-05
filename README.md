@@ -47,8 +47,14 @@ _Step 3:_ Enjoy!
 
 ### Searching Algorithms:
 
-Linear Search<br />
-Binary Tree Search<br />
+<details>
+  <summary>Linear Search</summary>
+  <p>Linear Search works by going through a List and returning whenever the searched element is found.</p>
+</details>
+<details>
+  <summary>Binary Tree Search</summary>
+  <p>Binary Tree Search works by comparing the searched element with the current node (starting at the route) and from there going into the 'right' direction, eg. if the element is greater than the node Binary Search would traverse to the Node with the higher values.</p>
+</details>
 
 ## Data Structures
 
