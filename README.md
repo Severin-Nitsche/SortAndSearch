@@ -59,11 +59,11 @@ _Step 3:_ Enjoy!
 ## Data Structures
 
 <details>
-  <summary><a href="https://severin-nitsche.github.io/SortAndSearch/SortAndSearch/doc/severinnitsche/com/github/SortAndSearch.LinkedList.html">Linked List</a> </summary>
+  <summary><a href="https://severin-nitsche.github.io/SortAndSearch-Documentation/doc/severinnitsche/com/github/SortAndSearch.LinkedList.html">Linked List</a> </summary>
   <p>A Linked List is a data structure that consists of several nodes that each contain a reference to the next element in the chain.</p>
 </details>
 <details>
-  <summary><a href="https://severin-nitsche.github.io/SortAndSearch/SortAndSearch/doc/severinnitsche/com/github/SortAndSearch.BinaryTree.html">Binary Tree</a>
+  <summary><a href="https://severin-nitsche.github.io/SortAndSearch-Documentation/doc/severinnitsche/com/github/SortAndSearch.BinaryTree.html">Binary Tree</a>
   </summary>
   <p>...a tree structure, which, branching out from one root node, consists of several nodes that, besides one value, each keep two references: One to a node with a higher value, and anotherone to a node with a lower value...</p>
 </details>
